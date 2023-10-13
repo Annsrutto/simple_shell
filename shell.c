@@ -6,6 +6,10 @@
  * @argv: Argument vector.
  * Return: 0 on success.
  */
+
+/* Pointer to arrat of environment variables*/
+extern char ** environ;
+
 int main(int argc, char **argv)
 {
 	char *line = NULL;
@@ -41,6 +45,13 @@ int main(int argc, char **argv)
 			exit(0);
 		}
 
+		/* Check for the "env" command */
+		if (tokens[0] && strcmp(tokens[0], "env") == 0)
+		{
+			print_env();
+			continue;
+		}
+
 		/* Execute the command */
 		if (execute_command(line, argv) == -1)
 		{
@@ -59,3 +70,18 @@ int main(int argc, char **argv)
 
 	return (0);
 }
+
+/**
+  * print_env - function that prints the environment variable
+  */
+void print_env(void)
+{
+	int i;
+
+	for (i = 0; environ[i]; i++)
+	{
+		printf("%s\n", environ[i]);
+	}
+}
+
+

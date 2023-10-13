@@ -13,5 +13,6 @@
 int execute_command(char *cmd, char **argv);
 int execute_command2(char **tokens);
 char **tokenize_input(char *line);
+void print_env(void);
 
 #endif
