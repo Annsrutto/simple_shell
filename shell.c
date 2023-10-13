@@ -33,6 +33,14 @@ int main(int argc, char **argv)
 		/* Tokenize the input*/
 		tokens = tokenize_input(line);
 
+		/* Check for the "exit" command */
+		if (tokens[0] && strcmp(tokens[0],"exit") == 0)
+		{
+			free(line);
+			free(tokens);
+			exit(0);
+		}
+
 		/* Execute the command */
 		if (execute_command(line, argv) == -1)
 		{
