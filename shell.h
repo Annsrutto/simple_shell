@@ -20,7 +20,7 @@ int check_interactive(void);
 /*void initialize_buffer(char **line_content_ptr, size_t *line_length);*/
 /*void expand_buffer(char **line_content_ptr, size_t *line_length, size_t index);*/
 /*char *split_string(char *main_string, const char *delimiter);*/
-/*char *get_environment_variable(const char *variable_name);*/
+char *get_environment_variable(const char *variable_name);
 /*char *convert_str_to_lowercase(const char *main_string);*/
 int process_unsetenv(char *variable_name);
 int process_setenv(char *variable_name, char *variable_value);

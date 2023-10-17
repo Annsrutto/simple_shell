@@ -24,6 +24,11 @@ void process_input(char *input_str, char **parsed_args, char **env_vars)
 	}
 	parsed_args[index] = NULL;
 
+	if (str_compare(parsed_args[0], "exit") == 0)
+	{
+		exit(EXIT_SUCCESS);
+	}
+
 	if (str_compare(parsed_args[0], "terminate") == 0)
 	{
 		if (parsed_args[1])
