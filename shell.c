@@ -1,87 +1,50 @@
 #include "shell.h"
 
 /**
- * main - Main entry point for the shell.
- * @argc: Argument count.
- * @argv: Argument vector.
- * Return: 0 on success.
+ * main - Entry point of the program
+ * @args_count: The number of arguments passed.
+ * @args_list: The list of arguments.
+ * @env_list: The list of environment variables.
+ * Return: 0 (Success)
  */
-
-/* Pointer to arrat of environment variables*/
-extern char ** environ;
-
-int main(int argc, char **argv)
+int main(int args_count, char **args_list, char **env_list)
 {
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	char **tokens;
-	(void) argc; /* unused variable */
+	char *prompt_text = "$ ";
+	char *input_text = NULL;
+	size_t buffer_len = 0;
+	char *cmd_args[64];
+	int is_interactive_mode;
+	/*int index_count;*/
+	ssize_t read_status;
+	(void)args_count;
+	(void)args_list;
+	is_interactive_mode = check_interactive();
 
 	while (1)
 	{
-		printf("$ ");
-		read = getline(&line, &len, stdin);
+		if (is_interactive_mode && isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, prompt_text, str_len(prompt_text));
+		read_status = getline(&input_text, &buffer_len, stdin);
 
-		/* Handle end of file */
-		if (read == -1)
+		if (read_status == -1)
 		{
-			printf("\n");
-			free(line);
-			exit(0);
+			if (feof(stdin))
+			{
+				if (is_interactive_mode && isatty(STDIN_FILENO))
+					write(STDOUT_FILENO, "\n", 1);
+				free(input_text);
+				exit(EXIT_SUCCESS);
+			}
+			else
+			{
+				perror("Input read error");
+				free(input_text);
+				exit(EXIT_FAILURE);
+			}
 		}
-
-		/* Remove the newline character from the line */
-		line[read - 1] = '\0';
-
-		/* Tokenize the input*/
-		tokens = tokenize_input(line);
-
-		/* Check for the "exit" command */
-		if (tokens[0] && strcmp(tokens[0],"exit") == 0)
-		{
-			free(line);
-			free(tokens);
-			exit(0);
-		}
-
-		/* Check for the "env" command */
-		if (tokens[0] && strcmp(tokens[0], "env") == 0)
-		{
-			print_env();
-			continue;
-		}
-
-		/* Execute the command */
-		if (execute_command(line, argv) == -1)
-		{
-			perror(argv[0]);
-		}
-		
-		if (execute_command2(tokens) == -1)
-		{
-			perror(tokens[0]);
-		}
-
-		free(line);
-		line = NULL;
-		free(tokens);
+		process_input(input_text, cmd_args, env_list);
 	}
-
+	/*free(input_text);*/
 	return (0);
 }
-
-/**
-  * print_env - function that prints the environment variable
-  */
-void print_env(void)
-{
-	int i;
-
-	for (i = 0; environ[i]; i++)
-	{
-		printf("%s\n", environ[i]);
-	}
-}
-
 
