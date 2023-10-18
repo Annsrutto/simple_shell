@@ -42,9 +42,13 @@ int main(int args_count, char **args_list, char **env_list)
 				exit(EXIT_FAILURE);
 			}
 		}
-		process_input(input_text, cmd_args, env_list);
+		if (str_len(input_text) > 1)
+		{
+			input_text[str_exclude_span(input_text, "\n")] = 0;
+			process_input(input_text, cmd_args, env_list);
+		}
 	}
-	/*free(input_text);*/
+	free(input_text);
 	return (0);
 }
 

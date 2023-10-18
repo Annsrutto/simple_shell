@@ -9,12 +9,10 @@
  */
 int process_setenv(char *variable_name, char *variable_value)
 {
-	char success_msg[] = "Environment variable set.\n";
 	char error_msg[] = "Failed to set environment variable.\n";
 
 	if (setenv(variable_name, variable_value, 1) == 0)
 	{
-		write(STDOUT_FILENO, success_msg, str_len(success_msg));
 		return (0);
 	}
 	else
@@ -32,12 +30,10 @@ int process_setenv(char *variable_name, char *variable_value)
  */
 int process_unsetenv(char *variable_name)
 {
-	char success_msg[] = "Environment variable unset.\n";
 	char error_msg[] = "Failed to unset environment variable.\n";
 
 	if (unsetenv(variable_name) == 0)
 	{
-		write(STDOUT_FILENO, success_msg, str_len(success_msg));
 		return (0);
 	}
 	else

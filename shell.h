@@ -13,6 +13,7 @@
 
 extern char **environ;
 
+void run_simple_command(char *command);
 void run_command(char **args, char **env_vars);
 char *locate_cmd_path(char *command, char *system_path);
 int check_interactive(void);
