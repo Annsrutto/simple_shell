@@ -26,13 +26,7 @@ void process_input(char *input_str, char **parsed_args, char **env_vars)
 
 	if (str_compare(parsed_args[0], "exit") == 0)
 	{
-		if (parsed_args[1])
-		{
-			int exit_code = _atoi(parsed_args[1]);
-			exit(exit_code);
-		}
-		else
-			exit(EXIT_SUCCESS);
+		exit(EXIT_SUCCESS);
 	}
 	else if (str_compare(parsed_args[0], "setenv") == 0)
 		process_setenv(parsed_args[1], parsed_args[2]);
