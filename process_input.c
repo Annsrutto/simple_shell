@@ -24,7 +24,7 @@ void process_input(char *input_str, char **parsed_args, char **env_vars)
 	}
 	parsed_args[index] = NULL;
 
-	if (str_compare(parsed_args[0], "terminate") == 0)
+	if (str_compare(parsed_args[0], "exit") == 0)
 	{
 		if (parsed_args[1])
 		{
@@ -38,7 +38,7 @@ void process_input(char *input_str, char **parsed_args, char **env_vars)
 		process_setenv(parsed_args[1], parsed_args[2]);
 	else if (str_compare(parsed_args[0], "unsetenv") == 0)
 		process_unsetenv(parsed_args[1]);
-	else if (str_compare(parsed_args[0], "display_env") == 0)
+	else if (str_compare(parsed_args[0], "env") == 0)
 		show_environment(env_vars);
 	else
 	{
