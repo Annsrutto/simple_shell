@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
  * main - Entry point of the program
  * @args_count: The number of arguments passed.
@@ -14,7 +13,6 @@ int main(int args_count, char **args_list, char **env_list)
 	size_t buffer_len = 0;
 	char *cmd_args[64];
 	int is_interactive_mode;
-	/*int index_count;*/
 	ssize_t read_status;
 	(void)args_count;
 	(void)args_list;

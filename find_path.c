@@ -4,7 +4,7 @@
  * locate_cmd_path - Identifies the path of an executable in SYSTEM_PATH.
  * @command: The command to execute.
  * @system_path: The original SYSTEM_PATH variable.
- * Return: The complete path to the executable if found, or NULL if not located.
+ * Return: The complete path to the executable
  */
 char *locate_cmd_path(char *command, char *system_path)
 {

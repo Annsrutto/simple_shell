@@ -29,6 +29,7 @@ void run_simple_command(char *command)
 	else
 	{
 		int process_status;
+
 		waitpid(child_process, &process_status, 0);
 	}
 }

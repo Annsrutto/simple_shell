@@ -1,11 +1,10 @@
 #include "shell.h"
 
 /**
- * str_span - Determines the length of the initial portion of str1 
- *            which only consists of characters from str2.
+ * str_span - Determines the length of the initial portion of str1
+ * which only consists of characters from str2.
  * @str1: The main string to be examined.
  * @str2: The string containing characters to match.
- *
  * Return: The length of the initial portion of str1.
  */
 size_t str_span(const char *str1, const char *str2)

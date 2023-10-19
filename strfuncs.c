@@ -50,9 +50,8 @@ char *str_concat(char *dest, char *source)
  * str_char_search - Finds a character in a string.
  * @str: The string to search.
  * @ctr: The character to locate.
- 
  * Return: The first occurrence of 'ctr' in the string
- *         or NULL if the character is not located.
+ * or NULL if the character is not located.
  */
 char *str_char_search(const char *str, char ctr)
 {
