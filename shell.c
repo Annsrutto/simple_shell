@@ -1,52 +1,54 @@
 #include "shell.h"
 /**
- * main - Entry point of the program
- * @args_count: The number of arguments passed.
- * @args_list: The list of arguments.
- * @env_list: The list of environment variables.
- * Return: 0 (Success)
+ * main- Entry point
+ * @argc: number of arguments
+ * @argv: array of arguments
+ * @envp: environment variables
+ * Return: 0 upon success
  */
-int main(int args_count, char **args_list, char **env_list)
+int main(int argc, char *argv[], char **envp)
 {
-	char *prompt_text = "$ ";
-	char *input_text = NULL;
-	size_t buffer_len = 0;
-	char *cmd_args[64];
-	int is_interactive_mode;
-	ssize_t read_status;
-	(void)args_count;
-	(void)args_list;
-	is_interactive_mode = check_interactive();
+	char *input = NULL;
+	char **commands = NULL;
+	int proc_status;
+	pid_t child_pid;
+	(void)argc;
 
 	while (1)
 	{
-		if (is_interactive_mode && isatty(STDIN_FILENO))
-			write(STDOUT_FILENO, prompt_text, str_len(prompt_text));
-		read_status = getline(&input_text, &buffer_len, stdin);
+		input = NULL;
+		signal(SIGINT, handle_signal);
+		if (display_prompt(&input) == -1)
+			continue;
 
-		if (read_status == -1)
+		commands = str_tok(input);
+		if (!commands)
 		{
-			if (feof(stdin))
+			free_strings(99, 1, input);
+			continue;
+		}
+		free_strings(99, 1, input);
+
+		if (run_builtin_command(commands, envp))
+			continue;
+
+		child_pid = fork();
+		if (child_pid == 0)
+		{
+			search_path(commands, envp);
+			if (execve(commands[0], commands, NULL) == -1)
 			{
-				if (is_interactive_mode && isatty(STDIN_FILENO))
-					write(STDOUT_FILENO, "\n", 1);
-				free(input_text);
-				exit(EXIT_SUCCESS);
-			}
-			else
-			{
-				perror("Input read error");
-				free(input_text);
-				exit(EXIT_FAILURE);
+				perror(*argv);
+				free_command_list(commands);
+				exit(0);
 			}
 		}
-		if (str_len(input_text) > 1)
+		else
 		{
-			input_text[str_exclude_span(input_text, "\n")] = 0;
-			process_input(input_text, cmd_args, env_list);
+			free_command_list(commands);
+			if (!wait(&proc_status))
+				break;
 		}
 	}
-	free(input_text);
 	return (0);
 }
-

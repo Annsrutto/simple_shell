@@ -1,36 +1,74 @@
 #include "shell.h"
 
 /**
- * str_span - Determines the length of the initial portion of str1
- * which only consists of characters from str2.
- * @str1: The main string to be examined.
- * @str2: The string containing characters to match.
- * Return: The length of the initial portion of str1.
+ * str_extract - Function that extracts words from a string.
+ * @word_array: Array to store extracted words.
+ * @str: Pointer to the input string.
+ * Return: array of words
  */
-size_t str_span(const char *str1, const char *str2)
+void str_extract(char **word_array, char *str)
 {
-	const char *initial = str1;
-	const char *substr;
-	bool character_match;
+	int i, index1, total_words, len;
 
-	while (*initial != '\0')
+	len = i = index1 = total_words = 0;
+
+	while (str[i] != '\0')
 	{
-		character_match = false;
-		substr = str2;
-
-		while (*substr != '\0')
+		if (str[i] == ' ' || str[i + 1] == '\0')
 		{
-			if (*initial == *substr)
+			if (str[i] != ' ')
 			{
-				character_match = true;
-				break;
+				i++;
+				total_words = 1;
 			}
-			substr++;
+
+			if (total_words)
+			{
+				copy_substring_to_array(i - index1, str + index1, word_array + len);
+				if (!word_array + len)
+					exit(0);
+				len += 1;
+				index = i + 1;
+				total_words = 0;
+			}
+
+			if (str[i] == '\0')
+				continue;
+			i += 1;
+			index += 1;
+			continue;
 		}
-		if (!character_match)
-			break;
-		initial++;
+		else
+		{
+			if (!total_words)
+				index = i;
+			total_words = 1;
+		}
+		i += 1;
 	}
-	return (initial - str1);
+	word_array[len] = NULL;
+}
+
+/**
+ * copy_substring_to_array - Copies a substring into a word array.
+ * @len: Length of substring.
+ * @substr: Pointer to the substring.
+ * @dest: Pointer to the destination in the array.
+ */
+void copy_substring_to_array(int len, char *substr, char **dest)
+{
+	int j;
+
+	*dest = malloc(sizeof(char) * (len + 1));
+	if (!(*dest))
+	{
+		perror("Error: malloc\n");
+		free(dest);
+		exit(0);
+	}
+
+	for (j = 0; j < len; j++)
+		(*dest)[j] = substr[j];
+	(*dest)[j] = '\0';
 }
 

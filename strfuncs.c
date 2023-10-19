@@ -1,84 +1,75 @@
 #include "shell.h"
-/**
- * str_len - Returns the length of a string
- * @str: the string to get the length of
- * Return: the length of @string
- */
-size_t str_len(char *str)
-{
-	size_t length;
-
-	for (length = 0; str[length] != '\0'; length++)
-		;
-	return (length);
-}
 
 /**
- * str_copy - Copies a string
- * @dest: Destination string
- * @source: Source string
- * Return: The pointer to dest
+ * str_tok - Tokenize a string into words.
+ * @str: The input string.
+ * Return: An array of tokens.
  */
-char *str_copy(char *dest, char *source)
+char **str_tok(char *str)
 {
-	char *original_dest = dest;
+	char **tokens;
+	int num_tokens;
 
-	while ((*dest++ = *source++) != '\0')
-		;
-	return (original_dest);
-}
-
-/**
- * str_concat- Joins two strings
- * @dest: The destination string
- * @source: The source string
- * Return: A pointer to dest.
- */
-char *str_concat(char *dest, char *source)
-{
-	int i, j;
-
-	for (i = 0; dest[i] != '\0'; i++)
-		;
-	for (j = 0; source[j] != '\0'; j++)
-		dest[i + j] = source[j];
-	dest[i + j] = '\0';
-	return (dest);
-}
-
-/**
- * str_char_search - Finds a character in a string.
- * @str: The string to search.
- * @ctr: The character to locate.
- * Return: The first occurrence of 'ctr' in the string
- * or NULL if the character is not located.
- */
-char *str_char_search(const char *str, char ctr)
-{
-	while (*str != ctr && *str != '\0')
-	{
-		str++;
-	}
-	if (*str == ctr)
-		return ((char *)str);
-	else
+	num_tokens = count_words(str);
+	if (num_tokens <= 0)
 		return (NULL);
+
+	tokens = malloc(sizeof(char *) * (num_tokens + 1));
+	if (!tokens)
+		return (NULL);
+	str_extract(tokens, str);
+
+	return (tokens);
 }
 
 /**
- * str_compare_n - Compare two strings upto n characters.
- * @str1: The first string for comparison.
- * @str2: The second string for comparison.
- * @count: The number of characters to be compared.
- *
- * Return: The result between the first unmatching characters or 0.
+ * copy_word - Copies a word from a string.
+ * @dest_len: The length of the destination string.
+ * @src: The source string to extract the word from.
+ * @dest: The destination to store the copied word.
  */
-int str_compare_n(const char *str1, const char *str2, size_t count)
+void copy_word(int dest_len, char *src, char **dest)
 {
-	size_t i;
+	int idx;
 
-	for (i = 0; i < count && (str1[i] || str2[i]); i++)
-		if (str1[i] != str2[i])
-			return (str1[i] - str2[i]);
-	return (0);
+	*dest = malloc(sizeof(char) * (dest_len + 1));
+	if (!(*dest))
+	{
+		perror("Error: malloc failed");
+		free(dest);
+		exit(0);
+	}
+
+	for (idx = 0; idx < dest_len; idx++)
+		(*dest)[idx] = src[idx];
+	(*dest)[idx] = '\0';
 }
+
+/**
+ * _atoi - Convert a string to an integer.
+ * @str: The string to be converted.
+ * Return: Converted integer value.
+ */
+int _atoi(char *str)
+{
+	int idx, sign;
+	unsigned int result;
+
+	result = idx = 0;
+	sign = 1;
+
+	while ((str[idx] < '0' || str[idx] > '9') && str[idx] != '\0')
+	{
+		if (str[idx] == '-')
+			sign *= -1;
+		idx++;
+	}
+	for (; str[idx] != '\0' && str[idx] >= '0' && str[idx] <= '9'; idx++)
+	{
+		result = result * 10 + (str[idx] - '0');
+	}
+	result *= sign;
+
+	return (result);
+}
+

@@ -1,102 +1,80 @@
 #include "shell.h"
-/**
- * str_compare - compares two strings
- * @str1: The first string
- * @str2: The second string
- * Return: The difference
- */
-int str_compare(char *str1, char *str2)
-{
-	int i;
 
-	for (i = 0; str1[i] != '\0' && str2[i] != '\0'; i++)
+/**
+ * str_compare - Compare two strings.
+ * @str1: First string.
+ * @str2: Second string.
+ * Return: -ve value if str1 < str2, 0 if str1 == str2, else +ve.
+ */
+int str_compare(const char *str1, const char *str2)
+{
+	int index = 0;
+
+	while (str1[index] == str2[index])
+		index++;
+
+	return (str1[index] - str2[index]);
+}
+
+/**
+ * str_n_compare - Compare two strings.
+ * @str1: First string.
+ * @str2: Second string.
+ * Return: -ve value if str1 < str2, 0 if str1 == str2, else +ve.
+ */
+int str_n_compare(const char *str1, const char *str2)
+{
+	int index;
+
+	for (index = 0; str1[index] != '\0' || str2[index] != '\0'; index++)
 	{
-		if (str1[i] != str2[i])
-		{
-			return (str1[i] - str2[i]);
-		}
+		if (str1[index] != str2[index])
+			return (str1[index] - str2[index]);
 	}
 	return (0);
 }
 
 /**
- * str_exclude_span - Calculates the length of str1
- * which contain characters not from str2.
- *
- * @str1: The string to be examined.
- * @str2: The characters to be excluded.
- *
- * Return: The length of the segment of str1 not containing
- * characters from str2.
+ * str_length - Calculate length of a string.
+ * @str: Input string.
+ * Return: Length of the string.
  */
-int str_exclude_span(char *str1, char *str2)
+int str_length(const char *str)
 {
 	int length = 0;
-	int i;
 
-	while (str1[length] != '\0')
-	{
-		for (i = 0; str2[i] != '\0'; i++)
-		{
-			if (str1[length] == str2[i])
-				return (length);
-		}
+	while (str[length] != '\0')
 		length++;
-	}
+
 	return (length);
 }
 
 /**
- * str_duplicate - Duplicates a string.
- * @str: The string to duplicate.
- *
- * Return: A pointer to copy of str, or NULL if memory allocation fails.
+ * str_concat - Concatenate two strings.
+ * @str1: First string.
+ * @str2: Second string to be appended to first string.
+ * Return: Pointer to the concatenated string; else NULL.
  */
-char *str_duplicate(const char *str)
+char *str_concat(char *str1, char *str2)
 {
-	int length = 0;
-	int i;
-	char *duplicate_str;
+	char *combined_str;
+	int i, j;
 
-	if (str == NULL)
-		return (NULL);
-	while (str[length] != '\0')
-		length++;
-	duplicate_str = (char *)malloc(length + 1);
+	if (!str1)
+		str1 = "";
+	if (!str2)
+		str2 = "";
 
-	if (duplicate_str == NULL)
-		return (NULL);
-	for (i = 0; i < length; i++)
-	{
-		duplicate_str[i] = str[i];
-	}
-	duplicate_str[length] = '\0';
-	return (duplicate_str);
+	combined_str = malloc(str_length(str1) + str_length(str2) + 1);
+	if (!combined_str)
+		exit(0);
+
+	for (i = 0; str1[i] != '\0'; i++)
+		combined_str[i] = str1[i];
+	for (j = 0; str2[j] != '\0'; j++)
+		combined_str[i + j] = str2[j];
+	combined_str[i + j] = '\0';
+
+	return (combined_str);
 }
 
-/**
- * _atoi - Converts a string to an integer
- * @str: The string to convert
- * Return: The converted integer
- */
-int _atoi(char *str)
-{
-	int sign = 1;
-	int result = 0;
-	int num_value;
-	int i;
-
-	for (i = 0; str[i] != '\0'; i++)
-	{
-		if (str[i] == '-')
-			sign *= -1;
-		if (str[i] >= '0' && str[i] <= '9')
-		{
-			num_value = str[i] - '0';
-			result = result * 10 + sign * num_value;
-			if (str[i + 1] < '0' || str[i + 1] > '9')
-				break;
-		}
-	}
-	return (result);
-}

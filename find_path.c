@@ -1,43 +1,52 @@
 #include "shell.h"
 
 /**
- * locate_cmd_path - Identifies the path of an executable in SYSTEM_PATH.
- * @command: The command to execute.
- * @system_path: The original SYSTEM_PATH variable.
- * Return: The complete path to the executable
+ * search_path_ - Check if the command is in the path directory.
+ * @cmd: Command to be checked.
+ * @envp: Environment variables.
  */
-char *locate_cmd_path(char *command, char *system_path)
+void search_path(char **cmd, char **envp)
 {
-	char *duplicated_path;
-	char *segment;
-	char *executable_path;
-	struct stat file_stat;
+	char *cmd_prefix, *cmd_path, *path_env;
+	int idx, seg_start, is_last_seg;
 
-	duplicated_path = str_duplicate(system_path);
-	segment = strtok(duplicated_path, ":");
+	cmd_prefix = str_concat("/", cmd[0]);
+	path_env = fetch_environment("PATH", envp);
 
-	while (segment != NULL)
+	if (!path_env)
 	{
-		executable_path = malloc(str_len(segment) + str_len(command) + 2);
+		free(cmd_prefix);
+		exit(0);
+	}
 
-		str_copy(executable_path, segment);
-		str_concat(executable_path, "/");
-		str_concat(executable_path, command);
-		str_concat(executable_path, "\0");
-		if (stat(executable_path, &file_stat) == 0)
+	seg_start = idx = is_last_seg = 0;
+	while (path_env[idx])
+	{
+		if (path_env[idx] == ':' || !path_env[idx + 1])
 		{
-			free(duplicated_path);
-			return (executable_path);
-		}
-		free(executable_path);
-		segment = strtok(NULL, ":");
-	}
-	free(duplicated_path);
+			is_last_seg = !path_env[idx + 1];
+			if (is_last_seg)
+				idx++;
 
-	if (stat(command, &file_stat) == 0)
-	{
-		return (str_duplicate(command));
+			cmd_path = str_concat(path_env + seg_start, cmd_prefix);
+
+			if (access(cmd_path, F_OK) == 0)
+			{
+				free(cmd[0]);
+				cmd[0] = cmd_path;
+				free(cmd_prefix);
+				return;
+			}
+
+			free(cmd_path);
+			if (is_last_seg)
+				break;
+
+			seg_start = idx + 1;
+		}
+		idx++;
 	}
-	return (NULL);
+
+	free(cmd_prefix);
 }
 

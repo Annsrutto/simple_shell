@@ -1,20 +1,31 @@
 #include "shell.h"
 
 /**
- * show_environment - Displays the environment variables.
- * @env_vars: Array containing the environment variables.
- *
- * Return: None.
+ * fetch_environment- Retrieve the value of a specified environment variable.
+ * @variable_name: Name of the environment variable to retrieve.
+ * @envp: List of all environment variables.
+ * Return: Pointer to value of environment variable, or NULL if not found.
  */
-
-void show_environment(char **env_vars)
+char *fetch_environment(const char *variable_name, char **envp)
 {
-	int index;
+	int idx = 0, x = 0;
+	int var_len, outcome;
 
-	for (index = 0; env_vars[index] != NULL; index++)
+	while (envp[idx] != NULL)
 	{
-		write(STDOUT_FILENO, env_vars[index], str_len(env_vars[index]));
-		write(STDOUT_FILENO, "\n", 1);
+		outcome = str_compare(variable_name, (const char *)envp[idx]);
+
+		if (outcome == 1)
+		{
+			var_len = str_length(envp[idx]);
+
+			while (envp[idx][x] != '=')
+				x++;
+			var_len -= x;
+			return (envp[idx] + x + 1);
+		}
+		idx++;
 	}
+	return (NULL);
 }
 
