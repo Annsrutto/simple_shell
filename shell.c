@@ -20,7 +20,6 @@ int main(int argc, char *argv[], char **envp)
 		signal(SIGINT, handle_signal);
 		if (display_prompt(&input) == -1)
 			continue;
-
 		commands = str_tok(input);
 		if (!commands)
 		{
@@ -28,10 +27,8 @@ int main(int argc, char *argv[], char **envp)
 			continue;
 		}
 		free_strings(99, 1, input);
-
 		if (run_builtin_command(commands, envp))
 			continue;
-
 		child_pid = fork();
 		if (child_pid == 0)
 		{

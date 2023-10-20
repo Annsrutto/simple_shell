@@ -1,7 +1,6 @@
 #include "shell.h"
-
 /**
- * search_path_ - Check if the command is in the path directory.
+ * search_path - Check if the command is in the path directory.
  * @cmd: Command to be checked.
  * @envp: Environment variables.
  */
@@ -12,7 +11,6 @@ void search_path(char **cmd, char **envp)
 
 	cmd_prefix = str_concat("/", cmd[0]);
 	path_env = fetch_environment("PATH", envp);
-
 	if (!path_env)
 	{
 		free(cmd_prefix);
@@ -46,7 +44,6 @@ void search_path(char **cmd, char **envp)
 		}
 		idx++;
 	}
-
 	free(cmd_prefix);
 }
 
