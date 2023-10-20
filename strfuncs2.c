@@ -25,23 +25,23 @@ void str_extract(char **word_array, char *str)
 			if (total_words)
 			{
 				copy_substring_to_array(i - index1, str + index1, word_array + len);
-				if (!word_array + len)
+				if (!word_array[len])
 					exit(0);
 				len += 1;
-				index = i + 1;
+				index1 = i + 1;
 				total_words = 0;
 			}
 
 			if (str[i] == '\0')
 				continue;
 			i += 1;
-			index += 1;
+			index1 += 1;
 			continue;
 		}
 		else
 		{
 			if (!total_words)
-				index = i;
+				index1 = i;
 			total_words = 1;
 		}
 		i += 1;

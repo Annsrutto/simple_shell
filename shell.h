@@ -10,11 +10,15 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 extern char **environ;
 int main(int argc, char *argv[], char **envp);
 int display_prompt(char **command_str);
 void handle_signal(int signal_number);
+int process_setenv(char *variable_name, char *variable_value);
+int process_unsetenv(char *variable_name);
+void handle_special_commands(char **args, char **envp);
 int run_builtin_command(char **args, char **envp);
 char *fetch_environment(const char *variable_name, char **envp);
 int display_environment(char **args, char **envp);
